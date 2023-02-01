@@ -1,4 +1,4 @@
-package Configuration
+package configuration
 
 import (
 	"context"
@@ -36,7 +36,7 @@ func ConnectDB() *mongo.Client {
 var DB *mongo.Client = ConnectDB()
 
 // getting database collections
-func GetGollection(client *mongo.Client, collectionName string) *mongo.Collection {
+func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
 	collection := client.Database("golangAPI").Collection(collectionName)
 	return collection
 }
