@@ -122,7 +122,7 @@ func DeleteRes() gin.HandlerFunc {
 	}
 }
 
-/*func UpdateRes() gin.HandlerFunc {
+func UpdateRes() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		resId := c.Param("id")
@@ -143,7 +143,18 @@ func DeleteRes() gin.HandlerFunc {
 			return
 		}
 
-		//update := bson.M{"id": res.}//need to update whole json body
+		update := bson.M{
+			"id":            res.Id,
+			"name":          res.Name,
+			"type":          res.Type,
+			"contact":       res.ContactNumber,
+			"serviceoption": res.ServiceOption,
+			"hours":         res.OpenHours,
+			"website":       res.Website,
+			"address":       res.Address,
+			"rating":        res.Rating,
+			"menu":          res.Menu,
+		}
 		result, err := resCollection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": update})
 
 		if err != nil {
@@ -163,4 +174,4 @@ func DeleteRes() gin.HandlerFunc {
 		c.JSON(http.StatusOK, ctxResponse.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": updatedRes}})
 
 	}
-}*/
+}
