@@ -1,4 +1,4 @@
-package responses
+package ctxResponse
 
 type Response struct {
 	Status  int                    `json:"status"`

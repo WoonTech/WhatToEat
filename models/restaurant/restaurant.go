@@ -1,4 +1,4 @@
-package models
+package ctxRestaurant
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
@@ -13,5 +13,16 @@ type Restaurant struct {
 	Address            string             `json:"address,omitempty"`
 	CommentEntry       uint8              `json:"comment,omitempty"`
 	RatingEntry        uint8              `json:"rating,omitempty"`
-	ItemsEntry         uint8              `json:"items,omitempty"`
+	MenuEntry          Items              `json:"items,omitempty"`
+}
+
+type Items struct {
+	Id   primitive.ObjectID `json:"id,omitempty"`
+	Name string             `json:"name,omitempty" validate:"required"`
+	Code string             `json:"code" validate:"required"`
+}
+
+type Rating struct {
+	Id     primitive.ObjectID `json:"id,omitempty"`
+	Rating float32            `json:"rating,omitempty"`
 }
