@@ -37,8 +37,16 @@ func CreateRes() gin.HandlerFunc {
 		}
 
 		newRes := ctxRestaurant.Restaurant{
-			Id:   primitive.NewObjectID(),
-			Name: res.Name,
+			Id:            primitive.NewObjectID(),
+			Name:          res.Name,
+			Type:          res.Type,
+			ContactNumber: res.ContactNumber,
+			ServiceOption: res.ServiceOption,
+			OpenHours:     res.OpenHours,
+			Website:       res.Website,
+			Address:       res.Address,
+			Rating:        res.Rating,
+			Menu:          res.Menu,
 		}
 
 		result, err := resCollection.InsertOne(ctx, newRes)
@@ -166,8 +174,7 @@ func UpdateRes() gin.HandlerFunc {
 		if result.MatchedCount == 1 {
 			err := resCollection.FindOne(ctx, bson.M{"id": objId}).Decode(&updatedRes)
 			if err != nil {
-				c.JSON(http.StatusInternalServerError, ctxResponse.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
-				return
+
 			}
 		}
 

@@ -8,8 +8,8 @@ import (
 
 type Restaurant struct {
 	Id            primitive.ObjectID `json:"id,omitempty"`
-	Name          string             `json:"name,omitempty" validate:"requried"`
-	Type          string             `json:"type,omitempty" validate:"requried"`
+	Name          string             `json:"name,omitempty"`
+	Type          string             `json:"type,omitempty"`
 	ContactNumber string             `json:"contact,omitempty"`
 	ServiceOption ServiceOption      `json:"serviceoption,omitempty"`
 	OpenHours     string             `json:"hours,omitempty"`
@@ -21,18 +21,18 @@ type Restaurant struct {
 
 type Menu struct {
 	Id   primitive.ObjectID `json:"id,omitempty"`
-	Name string             `json:"name,omitempty" validate:"required"`
-	Code string             `json:"code" validate:"required"`
+	Name string             `json:"name,omitempty"`
+	Code string             `json:"code"`
 	//pictures
 }
 
 type Rating struct {
 	Id        primitive.ObjectID `json:"id,omitempty"`
-	UserId    uint8              `json:"userId,omitempty" validate:"required"`
+	UserId    uint8              `json:"userId,omitempty"`
 	CreatedAt time.Time          `json:"createdat,omitempty"`
 	UpdatedAt time.Time          `json:"updatedat,omitempty"`
-	Status    string             `json:"status,omitempty" validate:"required"`
-	Rating    float32            `json:"rating,omitempty" validate:"required"`
+	Status    string             `json:"status,omitempty"`
+	Rating    float32            `json:"rating,omitempty"`
 	Comment   string             `json:"comment,omitempty"`
 }
 
