@@ -1,4 +1,4 @@
-package ctxRestaurant
+package models
 
 import (
 	"time"

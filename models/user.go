@@ -1,4 +1,4 @@
-package ctxUser
+package models
 
 import (
 	"time"
