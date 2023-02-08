@@ -23,5 +23,9 @@ type AuthDetail struct {
 	AutoLogin   bool               `json:"autologin,omitempty"`
 	LastLoginAt time.Time          `json:"lastloginat,omitempty"`
 	ApiKey      string             `json:"apikey,omitempty"`
-	ApiSecreet  string             `json:"apisecret,omitempty"`
+	ApiSecret   string             `json:"apisecret,omitempty"`
+}
+
+type Token struct {
+	Token string `json:"apiKey,omitempty"`
 }
