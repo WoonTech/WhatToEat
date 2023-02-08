@@ -15,7 +15,7 @@ import (
 
 var pollCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "authentication")
 
-func CreateAuth() gin.HandlerFunc {
+func CreatePoll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		var poll models.Poll
@@ -45,7 +45,7 @@ func CreateAuth() gin.HandlerFunc {
 	}
 }
 
-func GetAuth() gin.HandlerFunc {
+func GetPoll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		resId := c.Param("id")
@@ -64,7 +64,7 @@ func GetAuth() gin.HandlerFunc {
 	}
 }
 
-func DeleteAuth() gin.HandlerFunc {
+func DeletePoll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		pollId := c.Param("id")
@@ -88,7 +88,35 @@ func DeleteAuth() gin.HandlerFunc {
 	}
 }
 
-func UpdateAuth() gin.HandlerFunc {
+func GetAllPoll() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		var polls []models.Poll
+		defer cancel()
+
+		results, err := pollCollection.Find(ctx, bson.M{})
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+		//reading from the db in an optimal way
+		defer results.Close(ctx)
+		for results.Next(ctx) {
+			var poll models.Poll
+			if err = results.Decode(&poll); err != nil {
+				c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			}
+
+			polls = append(polls, poll)
+		}
+
+		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": polls}})
+
+	}
+}
+
+func UpdatePoll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		pollId := c.Param("id")

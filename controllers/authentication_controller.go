@@ -15,7 +15,7 @@ import (
 
 var authCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "polls")
 
-func CreatePoll() gin.HandlerFunc {
+func CreateAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		var poll models.Poll
@@ -45,10 +45,12 @@ func CreatePoll() gin.HandlerFunc {
 	}
 }
 
-func GetPoll() gin.HandlerFunc {
+func GetBasicAuthKey() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		resId := c.Param("id")
+		authId := c.Param("id")
+		authPassword := c.Param("password")
+		var token models.Token
 		var poll models.Poll
 		defer cancel()
 
@@ -64,31 +66,43 @@ func GetPoll() gin.HandlerFunc {
 	}
 }
 
-func GetAllPoll() gin.HandlerFunc {
+func GetGoogleAuthKey() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		var polls []models.Poll
+		resId := c.Param("id")
+		var auth models.Auth
+		var poll models.Poll
 		defer cancel()
 
-		results, err := pollCollection.Find(ctx, bson.M{})
+		objid, _ := primitive.ObjectIDFromHex(resId)
 
+		err := pollCollection.FindOne(ctx, bson.M{"id": objid}).Decode(&poll)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "Poll with specified ID not found"}})
 			return
 		}
-		//reading from the db in an optimal way
-		defer results.Close(ctx)
-		for results.Next(ctx) {
-			var poll models.Poll
-			if err = results.Decode(&poll); err != nil {
-				c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
-			}
 
-			polls = append(polls, poll)
+		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": poll}})
+	}
+}
+
+func GetFacebookAuthKey() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		resId := c.Param("id")
+		var auth models.Auth
+		var poll models.Poll
+		defer cancel()
+
+		objid, _ := primitive.ObjectIDFromHex(resId)
+
+		err := pollCollection.FindOne(ctx, bson.M{"id": objid}).Decode(&poll)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "Poll with specified ID not found"}})
+			return
 		}
 
-		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": polls}})
-
+		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": poll}})
 	}
 }
 
