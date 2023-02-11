@@ -1,0 +1,13 @@
+package utils
+
+func EmailVerification(email string) bool {
+
+}
+
+func ContactVerification(contact string) bool {
+
+}
+
+func PasswordVerification(password string) bool {
+
+}

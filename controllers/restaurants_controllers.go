@@ -54,7 +54,7 @@ func CreateRes() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusCreated, models.Response{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": result}})
+		c.JSON(http.StatusCreated, models.Response{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": result, "name": res.Name}})
 	}
 }
 
