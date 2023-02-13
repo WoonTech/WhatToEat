@@ -34,7 +34,6 @@ type ServiceOption struct {
 
 type MenuHeader struct {
 	Id        int           `json:"id,omitempty"`
-	MenuKey   int           `json:"menu_key,omitempty"`
 	CreatedAt time.Time     `json:"created_at,omitempty"`
 	UpdatedAt time.Time     `json:"updated_at,omitempty"`
 	Menu      []MenuDetails `json:"menu_details,omitempty"`
