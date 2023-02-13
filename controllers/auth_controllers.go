@@ -3,18 +3,15 @@ package controllers
 import (
 	"net/http"
 	"time"
-	"what-to-eat/configuration"
 	"what-to-eat/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/net/context"
 )
 
-var credCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "credential")
 var sessions = map[string]models.Session{}
 
 func isExpired(s models.Session) bool {
