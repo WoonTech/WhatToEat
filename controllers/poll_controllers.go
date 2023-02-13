@@ -3,17 +3,13 @@ package controllers
 import (
 	"net/http"
 	"time"
-	"what-to-eat/configuration"
 	"what-to-eat/models"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/net/context"
 )
-
-var pollCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "authentication")
 
 func CreatePoll() gin.HandlerFunc {
 	return func(c *gin.Context) {

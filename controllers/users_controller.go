@@ -4,16 +4,12 @@ import (
 	"context"
 	"net/http"
 	"time"
-	"what-to-eat/configuration"
 	"what-to-eat/models"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
-
-var userCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "users")
 
 func CreateUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
