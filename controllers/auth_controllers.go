@@ -42,7 +42,7 @@ func SignUp() gin.HandlerFunc {
 
 		cred.Id = primitive.NewObjectID()
 
-		result, err := pollCollection.InsertOne(ctx, cred)
+		result, err := credCollection.InsertOne(ctx, cred)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
@@ -72,7 +72,7 @@ func Login() gin.HandlerFunc {
 		}
 
 		var expectedCreds models.Credentials
-		err := pollCollection.FindOne(ctx, bson.M{"username": creds.Username}).Decode(&expectedCreds)
+		err := credCollection.FindOne(ctx, bson.M{"username": creds.Username}).Decode(&expectedCreds)
 		if err != nil {
 			c.JSON(http.StatusNotFound, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "The username or password you entered is incorrect"}})
 			return

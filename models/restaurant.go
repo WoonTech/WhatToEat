@@ -5,6 +5,8 @@ import (
 )
 
 type Restaurant struct {
+	CreatedAt     time.Time       `json:"created_at,omitempty"`
+	UpdatedAt     time.Time       `json:"updated_at,omitempty"`
 	Id            int             `json:"id,omitempty"`
 	Name          string          `json:"name,omitempty"`
 	Type          string          `json:"type,omitempty"` //foodpanda,grabfood,googlemap,standalone
@@ -15,7 +17,7 @@ type Restaurant struct {
 	Address       string          `json:"address,omitempty"`
 	Status        string          `json:"status,omitempty"` //active, deleted,hided
 	Rating        []Rating        `json:"rating,omitempty"`
-	Menu          []MenuHeader    `json:"menu,omitempty"`
+	Menu          []Menu          `json:"menu,omitempty"`
 }
 
 type Rating struct {
@@ -32,18 +34,20 @@ type ServiceOption struct {
 	OptionName string `json:"option,omitempty"`
 }
 
-type MenuHeader struct {
-	Id        int           `json:"id,omitempty"`
-	CreatedAt time.Time     `json:"created_at,omitempty"`
-	UpdatedAt time.Time     `json:"updated_at,omitempty"`
-	Menu      []MenuDetails `json:"menu_details,omitempty"`
+type Menu struct {
+	Id             int           `json:"id,omitempty"`
+	RestaurantName string        `json:"restaurant_name,omitempty"`
+	RestaurantId   int           `json:"restaurant_id,omitempty"`
+	CreatedAt      time.Time     `json:"createdatt,omitempty"`
+	UpdatedAt      time.Time     `json:"updatedatt,omitempty"`
+	Menu           []MenuDetails `json:"menu_details,omitempty"`
 }
 
 type MenuDetails struct {
-	Id     int     `json:"id,omitempty"`
-	Name   string  `json:"name,omitempty"`
-	Code   string  `json:"code,omitempty"`
-	Images []byte  `json:"images,omitempty"`
-	Price  float32 `json:"price,omitempty"`
-	Status string  `json:"status,omitempty"`
+	Name     string  `json:"name,omitempty"`
+	Code     string  `json:"code,omitempty"`
+	Images   []byte  `json:"images,omitempty"`
+	Price    float32 `json:"price,omitempty"`
+	Currency string  `json:"currency,omitempty"`
+	Status   string  `json:"status,omitempty"`
 }
