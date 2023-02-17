@@ -38,8 +38,8 @@ type Menu struct {
 	Id             int           `json:"id,omitempty"`
 	RestaurantName string        `json:"restaurant_name,omitempty"`
 	RestaurantId   int           `json:"restaurant_id,omitempty"`
-	CreatedAt      time.Time     `json:"created_at,omitempty"`
-	UpdatedAt      time.Time     `json:"updated_at,omitempty"`
+	CreatedAt      time.Time     `json:"createdatt,omitempty"`
+	UpdatedAt      time.Time     `json:"updatedatt,omitempty"`
 	Menu           []MenuDetails `json:"menu_details,omitempty"`
 }
 

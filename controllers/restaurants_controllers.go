@@ -136,7 +136,7 @@ func DeleteRes() gin.HandlerFunc {
 		}
 
 		//convert the restaurant status to deleted
-		result, err := resCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": bson.D{{"updated_at", timeNow}, {"status", utils.StatusDeleted}}})
+		result, err := resCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": bson.D{{"updatedat", timeNow}, {"status", utils.StatusDeleted}}})
 		var updatedRes models.Restaurant
 		if result.MatchedCount == 1 {
 			err := resCollection.FindOne(ctx, bson.M{"id": id}).Decode(&updatedRes)
@@ -182,7 +182,7 @@ func UpdateRes() gin.HandlerFunc {
 		}
 
 		update := bson.M{
-			"updated_at":    timeNow,
+			"updatedat":     timeNow,
 			"id":            id,
 			"name":          res.Name,
 			"type":          res.Type,
@@ -238,6 +238,13 @@ func CreateMenu() gin.HandlerFunc {
 			return
 		}
 
+		//return if same id and restaurant name
+		err := menuCollection.FindOne(ctx, bson.M{"restaurantname": menu.RestaurantName, "restaurantid": menu.RestaurantId}).Err()
+		if err == nil {
+			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": "Duplicate restaurant name and id "}})
+			return
+		}
+
 		menuCount, err := menuCollection.CountDocuments(ctx, bson.M{})
 		if err != nil {
 			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
@@ -253,11 +260,12 @@ func CreateMenu() gin.HandlerFunc {
 			Menu:           menu.Menu,
 		}
 
-		menuResult, err := resCollection.InsertOne(ctx, newMenu)
+		menuResult, err := menuCollection.InsertOne(ctx, newMenu)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
+		c.JSON(http.StatusCreated, models.Response{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": menuResult, "name": newMenu}})
 
 		//insert the menu into the restaurant
 		resResult, err := resCollection.UpdateOne(ctx, bson.M{"id": newMenu.RestaurantId}, bson.M{"$set": bson.D{{"updated_at", timeNow}, {"menu", newMenu}}})
@@ -282,7 +290,7 @@ func UpdateMenu() gin.HandlerFunc {
 		//convert string to integer
 		id, err := strconv.Atoi(menuId)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "Restaurant ID should be a integer"}})
+			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "Menu id should be a integer"}})
 			return
 		}
 
@@ -300,9 +308,9 @@ func UpdateMenu() gin.HandlerFunc {
 
 		//update menu
 		update := bson.M{
-			"id":           id,
-			"updated_at":   timeNow,
-			"menu_details": menu.Menu,
+			"id":          id,
+			"updatedat":   timeNow,
+			"menudetails": menu.Menu,
 		}
 		result, err := resCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": update})
 		if err != nil {
@@ -385,7 +393,7 @@ func DeleteMenu() gin.HandlerFunc {
 
 		//delete menu from restaurant
 		var emptyMenu models.Menu
-		resResult, err := resCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": bson.D{{"updated_at", timeNow}, {"menu", emptyMenu}}})
+		resResult, err := resCollection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": bson.D{{"updatedat", timeNow}, {"menu", emptyMenu}}})
 		_ = resResult
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
