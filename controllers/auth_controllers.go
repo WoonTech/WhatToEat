@@ -26,13 +26,13 @@ func SignUp() gin.HandlerFunc {
 
 		//validate the request body
 		if err := c.BindJSON(&cred); err != nil {
-			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Content: map[string]interface{}{"data": err.Error()}})
 			return
 		}
 
 		//use the validator library to validate required fields
 		if validationErr := validate.Struct(&cred); validationErr != nil {
-			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
+			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Content: map[string]interface{}{"data": validationErr.Error()}})
 			return
 		}
 
@@ -44,11 +44,11 @@ func SignUp() gin.HandlerFunc {
 
 		result, err := credCollection.InsertOne(ctx, cred)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: "error", Content: map[string]interface{}{"data": err.Error()}})
 			return
 		}
 
-		c.JSON(http.StatusCreated, models.Response{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": result}})
+		c.JSON(http.StatusCreated, models.Response{Status: http.StatusCreated, Message: "success", Content: map[string]interface{}{"data": result}})
 	}
 }
 
@@ -61,25 +61,25 @@ func Login() gin.HandlerFunc {
 		//check if cookie session existed
 
 		if err := c.BindJSON(&creds); err != nil {
-			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Content: map[string]interface{}{"data": err.Error()}})
 			return
 		}
 
 		//use the validator library to validate required fields
 		if validationErr := validate.Struct(&creds); validationErr != nil {
-			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
+			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusBadRequest, Message: "error", Content: map[string]interface{}{"data": validationErr.Error()}})
 			return
 		}
 
 		var expectedCreds models.Credentials
 		err := credCollection.FindOne(ctx, bson.M{"username": creds.Username}).Decode(&expectedCreds)
 		if err != nil {
-			c.JSON(http.StatusNotFound, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "The username or password you entered is incorrect"}})
+			c.JSON(http.StatusNotFound, models.Response{Status: http.StatusInternalServerError, Message: "error", Content: map[string]interface{}{"data": "The username or password you entered is incorrect"}})
 			return
 		}
 
 		if creds.Password != expectedCreds.Password {
-			c.JSON(http.StatusNotFound, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "The username or password you entered is incorrect"}})
+			c.JSON(http.StatusNotFound, models.Response{Status: http.StatusInternalServerError, Message: "error", Content: map[string]interface{}{"data": "The username or password you entered is incorrect"}})
 			return
 		}
 
@@ -93,7 +93,7 @@ func Login() gin.HandlerFunc {
 
 		//set cookie as session token
 		c.SetCookie("session_token", sessionToken, 120, "/", "localhost", false, true)
-		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": "Login successfully"}})
+		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Content: map[string]interface{}{"data": "Login successfully"}})
 	}
 }
 
@@ -104,21 +104,21 @@ func Refresh() gin.HandlerFunc {
 		sessionToken, err := c.Cookie("session_token")
 		if err != nil {
 			if err == http.ErrNoCookie {
-				c.JSON(http.StatusUnauthorized, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "Unauthorized cookie"}})
+				c.JSON(http.StatusUnauthorized, models.Response{Status: http.StatusInternalServerError, Message: "error", Content: map[string]interface{}{"data": "Unauthorized cookie"}})
 				return
 			}
-			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "Fail to retrieve cookie"}})
+			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusInternalServerError, Message: "error", Content: map[string]interface{}{"data": "Fail to retrieve cookie"}})
 		}
 
 		userSession, isExisted := sessions[sessionToken]
 		if !isExisted {
-			c.JSON(http.StatusUnauthorized, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "Unauthorized cookie"}})
+			c.JSON(http.StatusUnauthorized, models.Response{Status: http.StatusInternalServerError, Message: "error", Content: map[string]interface{}{"data": "Unauthorized cookie"}})
 			return
 		}
 
 		if isExpired(userSession) {
 			delete(sessions, sessionToken)
-			c.JSON(http.StatusUnauthorized, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "User session has expired"}})
+			c.JSON(http.StatusUnauthorized, models.Response{Status: http.StatusInternalServerError, Message: "error", Content: map[string]interface{}{"data": "User session has expired"}})
 			return
 		}
 
@@ -133,7 +133,7 @@ func Refresh() gin.HandlerFunc {
 		delete(sessions, sessionToken)
 
 		c.SetCookie("session_token", sessionToken, 120, "/", "localhost", false, true)
-		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": "Refresh successfully"}})
+		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Content: map[string]interface{}{"data": "Refresh successfully"}})
 
 	}
 }
@@ -145,16 +145,16 @@ func Logout() gin.HandlerFunc {
 		sessionToken, err := c.Cookie("session_token")
 		if err != nil {
 			if err == http.ErrNoCookie {
-				c.JSON(http.StatusUnauthorized, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "Unauthorized cookie"}})
+				c.JSON(http.StatusUnauthorized, models.Response{Status: http.StatusInternalServerError, Message: "error", Content: map[string]interface{}{"data": "Unauthorized cookie"}})
 				return
 			}
-			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": "Fail to retrieve cookie"}})
+			c.JSON(http.StatusBadRequest, models.Response{Status: http.StatusInternalServerError, Message: "error", Content: map[string]interface{}{"data": "Fail to retrieve cookie"}})
 		}
 
 		delete(sessions, sessionToken)
 
 		c.SetCookie("session_token", "", 0, "/", "localhost", false, true)
-		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": "Logout successfully"}})
+		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Content: map[string]interface{}{"data": "Logout successfully"}})
 
 	}
 }
