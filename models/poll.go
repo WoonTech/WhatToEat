@@ -2,22 +2,19 @@ package models
 
 import (
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Poll struct {
-	Id             primitive.ObjectID `json:"id,omitempty"`
-	Detail         PollDetail         `json:"detail,omitempty"`
-	ParticipantsNo uint8              `json:"No,omitempty"`
-	CreatedAt      time.Time          `json:"createdat,omitempty"`
-	UpdatedAt      time.Time          `json:"updatedat,omitempty"`
-	ExpiredAt      time.Time          `json:"expiredat,omitempty"`
+	Id             int        `json:"id" bson:"id"`
+	CreatedAt      time.Time  `json:"created_at" bson:"created_at"`
+	UpdatedAt      time.Time  `json:"updated_at" bson:"updated_at"`
+	ExpiredAt      time.Time  `json:"expired_at" bson:"expired_at"`
+	Detail         PollDetail `json:"poll_details" bson:"poll_details"`
+	ParticipantsNo uint8      `json:"participants" bson:"participants"`
 }
 
 type PollDetail struct {
-	Id           primitive.ObjectID `json:"id,omitempty"`
-	Restaurant   Restaurant         `json:"restaurant,omitempty"`
-	Participants []User             `json:"participants,omitempty"`
-	Results      uint8              `json:"results,omitempty"`
+	Restaurant   Restaurant `json:"restaurant" bson:"restaurant"`
+	Participants []User     `json:"participants" bson:"participants"`
+	Results      uint8      `json:"vote_result" bson:"results"`
 }
