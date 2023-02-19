@@ -22,7 +22,7 @@ type Credentials struct {
 }
 
 type CredDetail struct {
-	UserId      int       `json:"user" bson:"user"`
+	User        User      `json:"user" bson:"user"`
 	Status      string    `json:"status" bson:"status"`
 	LastLoginAt time.Time `json:"login_at" bson:"login_at"`
 }
