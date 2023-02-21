@@ -69,6 +69,7 @@ func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		var creds models.Credentials
+		timeNow := time.Now().UTC()
 		defer cancel()
 
 		//To-DO
@@ -99,11 +100,22 @@ func Login() gin.HandlerFunc {
 
 		//create cookie session
 		sessionToken := uuid.NewString()
-		expiredAt := time.Now().Add(120 * time.Second)
-		sessions[sessionToken] = models.Session{
+		expiredAt := time.Now().Add(120 * time.Second).UTC()
+		session := models.Session{
+			Id:        1,
+			CreatedAt: timeNow,
+			UpdatedAt: timeNow,
 			Username:  creds.Username,
+			SessionId: sessionToken,
 			ExpiredAt: expiredAt,
 		}
+		result, err := sessionCollection.InsertOne(ctx, session)
+		_ = result
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, models.Response{Status: http.StatusInternalServerError, Message: utils.FailCreatedSessionToken, Content: err.Error()})
+			return
+		}
+		//add this sessionToken to db
 
 		//set cookie as session token
 		c.SetCookie("session_token", sessionToken, 120, "/", "localhost", false, true)
