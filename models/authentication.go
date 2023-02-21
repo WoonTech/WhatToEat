@@ -5,6 +5,9 @@ import (
 )
 
 type Session struct {
+	Id        int       `json:"id" bson:"id"`
+	CreatedAt time.Time `json:"created_at" bson:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" bson:"updated_at"`
 	Username  string    `json:"username" bson:"username"`
 	SessionId string    `json:"session_Id" bson:"session_Id"`
 	ExpiredAt time.Time `json:"expiredat" bson:"expiredat"`

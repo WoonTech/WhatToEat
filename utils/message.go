@@ -26,3 +26,8 @@ const SuccessRefreshed = "Successfully refreshed"
 const FailRefreshed = "Failed refreshed"
 const SuccessLogin = "Successfully login"
 const FailLogin = "Failed login"
+
+const SuccessCreatedSessionToken = "Successfully created session token"
+const FailCreatedSessionToken = "Failed created session token"
+const SuccessUpdatedSessionToken = "Successfully updated session token"
+const FailUpdatedSessionToken = "Failed updated session token"
