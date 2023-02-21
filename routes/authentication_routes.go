@@ -11,5 +11,4 @@ func AuthenticationRoute(router *gin.Engine) {
 	router.POST("/SignUp", controllers.SignUp())
 	router.GET("/Refresh", controllers.Refresh())
 	router.POST("/Logout", controllers.Logout())
-	router.PUT("/Polls/:id", controllers.UpdatePoll())
 }

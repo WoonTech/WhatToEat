@@ -16,6 +16,6 @@ func main() {
 	routes.PollRoute(router)
 	routes.ResRoute(router)
 	routes.UserRoute(router)
-
+	routes.AuthenticationRoute(router)
 	router.Run("localhost:6000")
 }
