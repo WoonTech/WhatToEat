@@ -9,7 +9,7 @@ import (
 
 var resCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "restaurants")
 var menuCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "menus")
-var credCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "credential")
+var credCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "credentials")
 var sessionCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "sessions")
 var pollCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "polls")
 var userCollection *mongo.Collection = configuration.GetCollection(configuration.DB, "users")

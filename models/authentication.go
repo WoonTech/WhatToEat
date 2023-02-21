@@ -9,8 +9,9 @@ type Session struct {
 	CreatedAt time.Time `json:"created_at" bson:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" bson:"updated_at"`
 	Username  string    `json:"username" bson:"username"`
-	SessionId string    `json:"session_Id" bson:"session_Id"`
-	ExpiredAt time.Time `json:"expiredat" bson:"expiredat"`
+	SessionId string    `json:"session_id" bson:"session_id"`
+	ExpiredAt time.Time `json:"expired_at" bson:"expired_at"`
+	Status    string    `json:"status" bson:"status"`
 }
 
 type Credentials struct {
