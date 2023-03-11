@@ -1,0 +1,8 @@
+# Complied Object files, static and dymaic libs
+
+# Test binary, build folder and logs
+
+# Dependency Directories
+go.sum
+go
+.env

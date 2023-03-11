@@ -155,7 +155,7 @@ func Login() gin.HandlerFunc {
 	}
 }
 
-func Refresh() gin.HandlerFunc {
+/*func Refresh() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
@@ -194,7 +194,7 @@ func Refresh() gin.HandlerFunc {
 		c.JSON(http.StatusOK, models.Response{Status: http.StatusOK, Message: "success", Content: map[string]interface{}{"data": "Refresh successfully"}})
 
 	}
-}
+}*/
 
 func Logout() gin.HandlerFunc {
 	return func(c *gin.Context) {
